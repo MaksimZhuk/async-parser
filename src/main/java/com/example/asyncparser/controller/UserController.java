@@ -19,6 +19,8 @@ public class UserController {
     @PostMapping("/users")
     public List<UserResponseDto> getUsers(@RequestBody String data){
         System.out.println(data);
-        return new ArrayList<>();
+        ArrayList<UserResponseDto> dtos = new ArrayList<>();
+        dtos.add(new UserResponseDto(1, 2,"J"));
+        return dtos;
     }
 }

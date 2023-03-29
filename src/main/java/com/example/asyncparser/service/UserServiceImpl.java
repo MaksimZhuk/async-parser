@@ -24,8 +24,7 @@ import java.util.stream.Collectors;
 @Setter
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private HttpClient client;
+    private HttpClient client = HttpClient.newBuilder().build();
 
     private final String aqifyURITemplate = "https://api.agify.io/?name=%s";
     private final int TIMEOUT = 5_000;
