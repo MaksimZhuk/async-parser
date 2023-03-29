@@ -41,14 +41,6 @@ public class UserGeoServiceImpl implements UserGeoService {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        String body;
-        try {
-            body = client.send(HttpRequest.newBuilder(uri).GET().build(), HttpResponse.BodyHandlers.ofString()).body();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         CompletableFuture<UserGeoDataDTO> future = client.sendAsync(HttpRequest.newBuilder(uri).GET().build(), HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body).thenApply(JsonHelper::getUserGeoDataDTO);
         try {
