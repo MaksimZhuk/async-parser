@@ -1,10 +1,13 @@
 package com.example.asyncparser.service;
 
-import com.example.asyncparser.dto.UserResponseDto;
+import com.example.asyncparser.dto.UserResponseDTO;
 import com.example.asyncparser.util.JsonHelper;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -20,33 +23,36 @@ import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 @Service
-@Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private HttpClient client = HttpClient.newBuilder().build();
+    @Autowired
+    private HttpClient client;
 
-    private final String aqifyURITemplate = "https://api.agify.io/?name=%s";
-    private final int TIMEOUT = 5_000;
+    @Value("${HTTP_USERS_TEMPLATE}")
+    private String usersURITemplate;
+    @Value("${HTTP_REQUEST_TIMEOUT}")
+    private int TIMEOUT;
 
     @Override
-    public List<UserResponseDto> getUsers(List<String> names) {
+    public List<UserResponseDTO> getUsers(List<String> names) {
 
         List<URI> uris = names.stream().map(x -> {
             try {
-                return new URI(String.format(aqifyURITemplate, x));
+                return new URI(String.format(usersURITemplate, x));
             } catch (URISyntaxException e) {
                 e.printStackTrace();
                 throw new RuntimeException(String.format("URI creation problem with %s", x));
             }
         }).collect(Collectors.toList());
 
-        List<CompletableFuture<UserResponseDto>> futureList = uris.stream()
+        List<CompletableFuture<UserResponseDTO>> futureList = uris.stream()
                 .map(target -> client
                         .sendAsync(
                                 HttpRequest.newBuilder(target).GET().build(),
                                 HttpResponse.BodyHandlers.ofString())
-                        .thenApply(HttpResponse::body).thenApply(JsonHelper::readValueJackson)).collect(Collectors.toList());
+                        .thenApply(HttpResponse::body).thenApply(JsonHelper::getUserResponseDTO)).collect(Collectors.toList());
 
 
         return futureList.stream().parallel().map(x -> {
