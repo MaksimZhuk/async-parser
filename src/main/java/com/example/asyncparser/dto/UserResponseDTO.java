@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-public class UserResponseDto {
+public class UserResponseDTO {
     private Integer age;
     private Integer count;
     private String name;

@@ -1,9 +1,9 @@
 package com.example.asyncparser.service;
 
-import com.example.asyncparser.dto.UserResponseDto;
+import com.example.asyncparser.dto.UserResponseDTO;
 
 import java.util.List;
 
 public interface UserService {
-    public List<UserResponseDto> getUsers(List<String> names);
+    public List<UserResponseDTO> getUsers(List<String> names);
 }
