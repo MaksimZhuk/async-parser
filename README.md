@@ -7,7 +7,7 @@ localhost:8081/2ip?ip=8.8.8.8 or without 'ip' key.
 To retrieve data from https://api.agify.io/, send a POST request to:
 localhost:8081/users
 
-with the request body containing a list of names:
+with the request body containing a list of names in rows:
 name1
 name2
 ..
